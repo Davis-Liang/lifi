@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.nike.lifi.dao.TestDao;
+import com.nike.lifi.dao.mapper.TestBeanRowMapper;
 import com.nike.lifi.entity.TestBean;
 
 @Repository
