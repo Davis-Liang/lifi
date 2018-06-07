@@ -30,13 +30,13 @@ public class LIFIConstants {
 	public static final String CONFIG_SHEET_SELLING_DAYS = "CONFIG_SHEET_SELLING_DAYS";
 	
 	// Configuration Sheet - 产品评定
-	public static final String CONFIG_SHEET_PROD_RATIO = "CONFIG_SHEET_PROD_RATIO";
+	public static final String CONFIG_SHEET_PROD_COEFFICIENT = "CONFIG_SHEET_PROD_COEFFICIENT";
 	
 	// Configuration Sheet - 全铺产品
-	public static final String CONFIG_SHEET_PROD_ALLIN = "CONFIG_SHEET_PROD_ALLIN";
+	public static final String CONFIG_SHEET_PROD_FULL_LOAD_IN = "CONFIG_SHEET_PROD_FULL_LOAD_IN";
 	
 	// Configuration Sheet - 全铺门店
-	public static final String CONFIG_SHEET_STORE_ALLIN = "CONFIG_SHEET_STORE_ALLIN";
+	public static final String CONFIG_SHEET_STORE_FULL_LOAD_IN = "CONFIG_SHEET_STORE_FULL_LOAD_IN";
 		
 	// Configuration Sheet - 拆单阀值
 	public static final String CONFIG_SHEET_THRESHOLD = "CONFIG_SHEET_THRESHOLD";

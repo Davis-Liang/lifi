@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,20 +16,25 @@ import com.nike.lifi.entity.PPKBean;
 import com.nike.lifi.processor.PPKProcessor;
 import com.nike.lifi.processor.ProcessorEngine;
 import com.nike.lifi.service.BaseConfigService;
+import com.nike.lifi.util.SessionUserHelper;
 
 @Controller
 @RequestMapping("/config/ppk")
 @SuppressWarnings("unchecked")
+// TODO extends ConfigAbstractController
 public class PPKController {
 	
 	@Resource(name="ppkService")
 	private BaseConfigService<PPKBean> ppkService;
 	
-	@Resource
+	@Resource(type=PPKProcessor.class)
 	private PPKProcessor processor;
 
 	@RequestMapping("/show")
 	public String show(HttpServletRequest request) {
+		
+		Integer userID = SessionUserHelper.getCurrentUserId();
+		
 		Map<String, Object> sharedObject = (Map<String, Object>) request.getSession().getAttribute(LIFIConstants.SESSION_SHARED_OBJECT);
 		
 		////////////////TEST USE/////////////////////
