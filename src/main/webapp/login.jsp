@@ -23,5 +23,6 @@
 			</tr>
 		</table>
 	</form>
+	${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
 </body>
 </html>

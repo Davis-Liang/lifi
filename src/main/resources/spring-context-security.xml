@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans
-	xmlns="http://www.springframework.org/schema/security"
-	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans  
     http://www.springframework.org/schema/beans/spring-beans.xsd  
@@ -12,8 +10,7 @@
 
 	<debug />
 
-	<beans:bean id="ldapConfig"
-		class="com.nike.lifi.constants.LdapConfig">
+	<beans:bean id="ldapConfig" class="com.nike.lifi.constants.LdapConfig">
 		<beans:property name="ldapUrl" value="${ldap.url}"></beans:property>
 		<beans:property name="auth" value="${ldap.auth}"></beans:property>
 		<beans:property name="domain" value="${ldap.domain}"></beans:property>
@@ -22,6 +19,38 @@
 		<beans:property name="defPass" value="${ldap.defpass}"></beans:property>
 	</beans:bean>
 
+	<beans:bean id="md5Encoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+
+	<beans:bean id="securityMetadataSource"
+		class="com.nike.lifi.security.SysFilterInvocationSecurityMetadataSource" />
+
+	<beans:bean id="userDetailService" class="com.nike.lifi.security.SysUserDetailsService"></beans:bean>
+
+	<beans:bean id="accessDeniedHandler" class="com.nike.lifi.security.SysAccessDeniedHandler">
+		<beans:property name="errorPage" value="/403.jsp" />
+	</beans:bean>
+
+	<beans:bean id="authenticationProvider"
+		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<beans:property name="hideUserNotFoundExceptions" value="false" />
+		<beans:property name="userDetailsService" ref="userDetailService" />
+		<beans:property name="passwordEncoder" ref="md5Encoder" />
+		<!-- <beans:property name="saltSource" ref="saltSource" /> -->
+	</beans:bean>
+
+	<beans:bean id="accessDecisionManager" class="com.nike.lifi.security.SysAccessDecisionManager" />
+
+	<beans:bean id="filterSecurityInterceptor"
+		class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+		<beans:property name="accessDecisionManager" ref="accessDecisionManager" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="securityMetadataSource" ref="securityMetadataSource" />
+	</beans:bean>
+
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider ref="authenticationProvider" />
+	</authentication-manager>
+
 	<http pattern="/bower_components/**" security="none" />
 	<http pattern="/css/**" security="none" />
 	<http pattern="/js/**" security="none" />
@@ -29,40 +58,28 @@
 	<http pattern="/keepalive.htm" security="none" />
 	<http pattern="/static/**" security="none" />
 
-	<http use-expressions="true">
-		<form-login login-page="/login.jsp"
-			login-processing-url="/login.do" username-parameter="username"
-			password-parameter="password" default-target-url="/index.jsp"
-			always-use-default-target="false" />
+	<http use-expressions="true" access-decision-manager-ref="accessDecisionManager">
+
+		<access-denied-handler ref="accessDeniedHandler" />
+
+		<form-login login-page="/login.jsp" login-processing-url="/login.do" username-parameter="username"
+			password-parameter="password" default-target-url="/index.jsp" always-use-default-target="false" />
 
 		<http-basic />
 
-		<session-management
-			invalid-session-url="/login.jsp">
-			<concurrency-control max-sessions="1"
-				error-if-maximum-exceeded="false" expired-url="/login.jsp" />
+		<session-management invalid-session-url="/login.jsp">
+			<concurrency-control max-sessions="1" error-if-maximum-exceeded="false" expired-url="/login.jsp" />
 		</session-management>
 
 		<csrf disabled="true" />
 
-		<logout logout-url="/logout.do" logout-success-url="/login.jsp"
-			delete-cookies="JSESSIONID" />
+		<logout logout-url="/logout.do" logout-success-url="/login.jsp" delete-cookies="JSESSIONID" />
 
-		<intercept-url pattern="/login.jsp"
-			access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/login.jsp" access="hasRole('ROLE_ANONYMOUS')" />
 
-		<intercept-url pattern="/**"
-			access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/**" access="hasRole('ROLE_LIFI_USER') or hasRole('ROLE_ADMIN')" />
+
+		<custom-filter ref="filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR" />
 	</http>
 
-	<authentication-manager
-		alias="authenticationManager">
-		<authentication-provider>
-			<user-service>
-				<user name="user" password="user" authorities="ROLE_USER" />
-				<user name="admin" password="123456"
-					authorities="ROLE_USER,ROLE_ADMIN" />
-			</user-service>
-		</authentication-provider>
-	</authentication-manager>
 </beans:beans>
