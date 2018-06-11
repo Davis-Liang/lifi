@@ -1,4 +1,4 @@
-package com.nike.lifi.security;
+package com.nike.lifi.security.handler;
 
 import java.io.IOException;
 

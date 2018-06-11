@@ -1,4 +1,4 @@
-package com.nike.lifi.security;
+package com.nike.lifi.security.entity;
 
 public class SysRole {
 

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import com.nike.lifi.security.SysUser;
+import com.nike.lifi.security.entity.SysUser;
 
 public interface SysUsersDao {
 	public SysUser getByUsername(String username);

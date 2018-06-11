@@ -10,9 +10,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.nike.lifi.constants.LdapConfig;
 import com.nike.lifi.dao.SysUsersDao;
+import com.nike.lifi.security.entity.SysUser;
 
 public class SysUserDetailsService implements UserDetailsService {
+
+	@Resource
+	private LdapConfig ldapConfig;
 
 	@Resource
 	private SysUsersDao sysUsersDao;

@@ -21,13 +21,37 @@
 
 	<beans:bean id="md5Encoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
 
+	<beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+
 	<beans:bean id="securityMetadataSource"
 		class="com.nike.lifi.security.SysFilterInvocationSecurityMetadataSource" />
 
 	<beans:bean id="userDetailService" class="com.nike.lifi.security.SysUserDetailsService"></beans:bean>
 
-	<beans:bean id="accessDeniedHandler" class="com.nike.lifi.security.SysAccessDeniedHandler">
+	<beans:bean id="accessDeniedHandler" class="com.nike.lifi.security.handler.SysAccessDeniedHandler">
 		<beans:property name="errorPage" value="/403.jsp" />
+	</beans:bean>
+	<beans:bean id="authenticationSuccessHandler" class="com.nike.lifi.security.handler.AjaxAuthSuccessHandler">
+		<beans:property name="defaultTargetUrl" value="/index.jsp" />
+	</beans:bean>
+	<beans:bean id="authenticationFailureHandler" class="com.nike.lifi.security.handler.AjaxAuthFailHandler">
+		<beans:property name="defaultFailureUrl" value="/login.jsp" />
+	</beans:bean>
+
+	<beans:bean id="usernamePasswordAuthenticationFilter" class="com.nike.lifi.security.filter.SysUsernamePasswordAuthenticationFilter">  
+	    <beans:property name="authenticationManager" ref="authenticationManager" />  
+	    <beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler" />  
+	    <beans:property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />  
+	    <beans:property name="filterProcessesUrl" value="/login.do" />  
+	    <beans:property name="postOnly" value="true" />  
+	    <beans:property name="usernameParameter" value="username" />  
+	    <beans:property name="passwordParameter" value="password" />  
+	</beans:bean>  
+
+	<beans:bean id="authenticationEntryPoint"
+		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<beans:constructor-arg name="loginFormUrl" value="/login.jsp" />
+		<beans:property name="useForward" value="true" />
 	</beans:bean>
 
 	<beans:bean id="authenticationProvider"
@@ -35,7 +59,6 @@
 		<beans:property name="hideUserNotFoundExceptions" value="false" />
 		<beans:property name="userDetailsService" ref="userDetailService" />
 		<beans:property name="passwordEncoder" ref="md5Encoder" />
-		<!-- <beans:property name="saltSource" ref="saltSource" /> -->
 	</beans:bean>
 
 	<beans:bean id="accessDecisionManager" class="com.nike.lifi.security.SysAccessDecisionManager" />
@@ -58,12 +81,9 @@
 	<http pattern="/keepalive.htm" security="none" />
 	<http pattern="/static/**" security="none" />
 
-	<http use-expressions="true" access-decision-manager-ref="accessDecisionManager">
+	<http use-expressions="true" access-decision-manager-ref="accessDecisionManager" entry-point-ref="authenticationEntryPoint">
 
 		<access-denied-handler ref="accessDeniedHandler" />
-
-		<form-login login-page="/login.jsp" login-processing-url="/login.do" username-parameter="username"
-			password-parameter="password" default-target-url="/index.jsp" always-use-default-target="false" />
 
 		<http-basic />
 
@@ -79,6 +99,7 @@
 
 		<intercept-url pattern="/**" access="hasRole('ROLE_LIFI_USER') or hasRole('ROLE_ADMIN')" />
 
+		<custom-filter ref="usernamePasswordAuthenticationFilter" position="FORM_LOGIN_FILTER"/>  
 		<custom-filter ref="filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR" />
 	</http>
 

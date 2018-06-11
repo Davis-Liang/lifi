@@ -17,7 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
 
 import com.nike.lifi.dao.SysUsersDao;
-import com.nike.lifi.security.SysUser;
+import com.nike.lifi.security.entity.SysUser;
 
 @Repository
 public class SysUsersDaoImpl implements SysUsersDao {

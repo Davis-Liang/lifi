@@ -1,4 +1,4 @@
-package com.nike.lifi.security;
+package com.nike.lifi.security.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
