@@ -5,6 +5,8 @@ public class LIFIConstants {
 	// Global Session Shared Object
 	public static final String SESSION_SHARED_OBJECT = "SESSION_SHARED_OBJECT";
 	
+	public static final String SESSION_USER_ID = "SESSION_USER_ID";
+	
 	// 针对每一个Configuration Sheet的数据，DATA为实际上传的数据，Bypass为跳过上传使用上一次的数据，Submitted为上传了新的数据的Flag
 	public static final String CONFIG_SHEET_DATA = "CONFIG_SHEET_DATA";
 
@@ -13,6 +15,9 @@ public class LIFIConstants {
 	public static final String CONFIG_SHEET_SUBMITTED = "CONFIG_SHEET_SUBMITTED";
 	
 	public static final String CONFIG_SHEET_FORMAT_PATH = "CONFIG_SHEET_FORMAT_PATH";
+	
+	// Validation 不通过时，储存错误信息
+	public static final String CONFIG_SHEET_VALIDATION_MESSAGE = "CONFIG_SHEET_VALIDATION_MESSAGE";
 
 	// Configuration Sheet - PPK
 	public static final String CONFIG_SHEET_PPK = "CONFIG_SHEET_PPK";

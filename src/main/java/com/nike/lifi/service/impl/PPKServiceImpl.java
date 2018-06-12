@@ -20,17 +20,22 @@ public class PPKServiceImpl implements BaseConfigService<PPKBean> {
 	private BaseConfigDao<PPKBean> ppkDao;
 
 	@Override
-	public List<PPKBean> list() {
-		return ppkDao.list();
+	public List<PPKBean> list(Integer userId) {
+		return ppkDao.list(userId);
 	}
 
 	@Override
-	public Map<String, Object> generateConfigMap() {
+	public Map<String, Object> generateConfigMap(Integer userId) {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put(LIFIConstants.CONFIG_SHEET_DATA, ppkDao.list());
+		returnMap.put(LIFIConstants.CONFIG_SHEET_DATA, ppkDao.list(userId));
 		returnMap.put(LIFIConstants.CONFIG_SHEET_BYPASS, new Boolean(false));
 		returnMap.put(LIFIConstants.CONFIG_SHEET_FORMAT_PATH, ppkDao.getFormatFilePath());
 		return returnMap;
+	}
+
+	@Override
+	public String getFormatFilePath() {
+		return ppkDao.getFormatFilePath();
 	}
 
 }

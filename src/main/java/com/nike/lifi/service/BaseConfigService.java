@@ -5,7 +5,9 @@ import java.util.Map;
 
 public interface BaseConfigService<T> {
 
-	public List<T> list();
+	public List<T> list(Integer userId);
 	
-	public Map<String, Object> generateConfigMap();
+	public Map<String, Object> generateConfigMap(Integer userId);
+	
+	public String getFormatFilePath();
 }
