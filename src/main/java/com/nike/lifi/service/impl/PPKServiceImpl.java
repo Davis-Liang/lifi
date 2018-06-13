@@ -29,7 +29,6 @@ public class PPKServiceImpl implements BaseConfigService<PPKBean> {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put(LIFIConstants.CONFIG_SHEET_DATA, ppkDao.list(userId));
 		returnMap.put(LIFIConstants.CONFIG_SHEET_BYPASS, new Boolean(false));
-		returnMap.put(LIFIConstants.CONFIG_SHEET_FORMAT_PATH, ppkDao.getFormatFilePath());
 		return returnMap;
 	}
 

@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nike.lifi.constants.LIFIConstants;
@@ -32,18 +34,15 @@ public class PPKController extends ConfigAbstractController {
 	@Resource(name = "ppkService")
 	private BaseConfigService<PPKBean> ppkService;
 
-	@Resource(type = PPKProcessor.class)
-	private PPKProcessor processor;
-
 	@RequestMapping("/show")
 	public String show(HttpServletRequest request) {
-		
+
 		Map<String, Object> sharedObject = getSharedObject(request);
 
 		Integer userId = SessionUserHelper.getCurrentUserId();
-		
+
 		if (sharedObject.containsKey(LIFIConstants.CONFIG_SHEET_PPK)) {
-			Map<String, Object> ppkMap = (Map<String, Object>) sharedObject.get(LIFIConstants.CONFIG_SHEET_PPK);
+			Map<String, Object> ppkMap = getConfigMap(request, LIFIConstants.CONFIG_SHEET_PPK);
 			if (!ppkMap.containsKey(LIFIConstants.CONFIG_SHEET_DATA)) {
 				List<PPKBean> list = ppkService.list(userId);
 				ppkMap.put(LIFIConstants.CONFIG_SHEET_DATA, list);
@@ -51,12 +50,14 @@ public class PPKController extends ConfigAbstractController {
 		} else {
 			sharedObject.put(LIFIConstants.CONFIG_SHEET_PPK, ppkService.generateConfigMap(userId));
 		}
-		request.setAttribute("data", ((Map<String, Object>) sharedObject.get(LIFIConstants.CONFIG_SHEET_PPK)).get(LIFIConstants.CONFIG_SHEET_DATA));
+		request.setAttribute("data", getConfigMap(request, LIFIConstants.CONFIG_SHEET_PPK).get(LIFIConstants.CONFIG_SHEET_DATA));
 		return "ppk";
 	}
 
 	@RequestMapping("/submit")
 	public String submit(HttpServletRequest request, @RequestParam("file") MultipartFile file) throws IOException {
+		WebApplicationContext appContext = ContextLoader.getCurrentWebApplicationContext();
+		PPKProcessor processor = appContext.getBean(PPKProcessor.class);
 		processor.init(file.getInputStream(), getSharedObject(request));
 		ProcessorEngine.process(processor);
 		return "forward:/config/ppk/show.do";
@@ -66,8 +67,7 @@ public class PPKController extends ConfigAbstractController {
 	public String confirm(HttpServletRequest request) {
 		Map<String, Object> sharedObject = getSharedObject(request);
 		if (sharedObject.containsKey(LIFIConstants.CONFIG_SHEET_PPK)) {
-			Map<String, Object> ppkMap = (Map<String, Object>) sharedObject.get(LIFIConstants.CONFIG_SHEET_PPK);
-			ppkMap.put(LIFIConstants.CONFIG_SHEET_BYPASS, new Boolean(true));
+			getConfigMap(request, LIFIConstants.CONFIG_SHEET_PPK).put(LIFIConstants.CONFIG_SHEET_BYPASS, new Boolean(true));
 		}
 		return "forward:/config/ppk/show.do";
 	}
@@ -115,8 +115,7 @@ public class PPKController extends ConfigAbstractController {
 	public void downloadHistory(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO write Sheet -- pending on Excel Util
 		Map<String, Object> sharedObject = getSharedObject(request);
-		List<PPKBean> list = (List<PPKBean>) ((Map<String, Object>) sharedObject.get(LIFIConstants.CONFIG_SHEET_PPK))
-				.get(LIFIConstants.CONFIG_SHEET_DATA);
+		List<PPKBean> list = (List<PPKBean>) getConfigMap(request, LIFIConstants.CONFIG_SHEET_PPK).get(LIFIConstants.CONFIG_SHEET_DATA);
 
 	}
 }

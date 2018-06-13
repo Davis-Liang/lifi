@@ -15,7 +15,7 @@
 	<context:component-scan base-package="com.nike.lifi.dao.impl" />
 	<context:component-scan base-package="com.nike.lifi.processor" />
 
-	<bean
+	<bean name="lifiProperties"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>

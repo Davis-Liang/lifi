@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
 <script>
@@ -22,7 +23,6 @@ function submitForm (type) {
 </head>
 <body>
 <h2>PPK Test Page</h2>
-
 	<table width="100%" border=1>
 		<tr>
 			<td>Prod Code</td>
@@ -35,7 +35,6 @@ function submitForm (type) {
 			</tr>
 		</c:forEach>
 	</table>
-
 
 	<form name="aForm" action="" method="POST" enctype="multipart/form-data">
 		<input name="file" type="file"/>

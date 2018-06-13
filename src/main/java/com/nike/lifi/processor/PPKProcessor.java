@@ -1,6 +1,5 @@
 package com.nike.lifi.processor;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +9,10 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.nike.lifi.constants.ConfigEntityConstants;
@@ -20,17 +21,14 @@ import com.nike.lifi.dao.BaseConfigDao;
 import com.nike.lifi.dao.UserBatchDao;
 import com.nike.lifi.entity.PPKBean;
 import com.nike.lifi.exception.ProcessorException;
+import com.nike.lifi.util.MessageSourceHelper;
 import com.nike.lifi.util.SessionUserHelper;
 
 @Component("ppkProcessor")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class PPKProcessor implements BaseProcessor {
+public class PPKProcessor extends ConfigAbstractProcessor {
 
 	private List<PPKBean> list = null;
-
-	private InputStream fileInputStream;
-
-	private Map<String, Object> sharedObject;
 
 	@Resource(name = "ppkDao")
 	private BaseConfigDao<PPKBean> ppkDao;
@@ -63,14 +61,15 @@ public class PPKProcessor implements BaseProcessor {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean afterProcess() {
-		((Map<String, Object>) this.sharedObject.get(LIFIConstants.CONFIG_SHEET_PPK)).put(LIFIConstants.CONFIG_SHEET_DATA,
-				ppkDao.list(SessionUserHelper.getCurrentUserId()));
+		Map<String, Object> ppkMap = (Map<String, Object>) getSharedObject().get(LIFIConstants.CONFIG_SHEET_PPK);
+		ppkMap.put(LIFIConstants.CONFIG_SHEET_DATA, ppkDao.list(SessionUserHelper.getCurrentUserId()));
+		ppkMap.put(LIFIConstants.CONFIG_SHEET_VALIDATION_MESSAGE, getValidationMessages());
 		return true;
 	}
 
 	private void retrieveData() {
 		PPKBean ppkBean = new PPKBean();
-		ppkBean.setPpk("PPK 6");
+		ppkBean.setPpk("1PPK 6");
 		ppkBean.setProdCd("SX4705-101");
 		list = new ArrayList<PPKBean>();
 		list.add(ppkBean);
@@ -80,24 +79,25 @@ public class PPKProcessor implements BaseProcessor {
 		boolean flag = true;
 		try {
 			for (PPKBean bean : list) {
-				Matcher matcher = Pattern.compile("PPK([-_]|\\s?)(\\d+)", Pattern.CASE_INSENSITIVE).matcher(bean.getPpk());
+				if (StringUtils.isEmpty(bean.getPpk())) {
+					getValidationMessages().add(MessageSourceHelper.getMessage("lifi.config.validation.empty", new String[] { "PPK", "PPK" },
+							LocaleContextHolder.getLocale()));
+					break;
+				}
+				Matcher matcher = Pattern.compile("^PPK([-_]|\\s?)(\\d+)", Pattern.CASE_INSENSITIVE).matcher(bean.getPpk());
 				if (matcher.find()) {
 					bean.setPpkValue(Integer.parseInt(matcher.group(2)));
 				} else {
 					flag = false;
-					break;
+					throw new NumberFormatException();
 				}
 			}
 		} catch (NumberFormatException e) {
+			getValidationMessages().add(MessageSourceHelper.getMessage("lifi.config.validation.format.wrong", new String[] { "PPK", "PPK" },
+					LocaleContextHolder.getLocale()));
 			flag = false;
 		}
 		return flag;
-	}
-
-	@Override
-	public void init(InputStream fi, Map<String, Object> sharedObject) {
-		this.sharedObject = sharedObject;
-		this.fileInputStream = fi;
 	}
 
 }

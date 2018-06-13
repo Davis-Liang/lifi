@@ -49,12 +49,15 @@
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="useCodeAsDefaultMessage" value="true" />
+		<property name="cacheSeconds" value="10"/>
 		<property name="basenames">
 			<list>
 				<value>classpath:messages</value>
 			</list>
 		</property>
 	</bean>
+	
+	<bean name="messageSourceHelper" class="com.nike.lifi.util.MessageSourceHelper"></bean>
 
 	<mvc:interceptors>
 		<bean id="localeChangeInterceptor"

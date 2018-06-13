@@ -9,14 +9,14 @@ import com.nike.lifi.exception.ProcessorException;
 public final class ProcessorEngine {
 
 	public static void process(BaseProcessor baseProcessor) {
-		if (baseProcessor.beforeProcess()) {
-			try {
+		try {
+			if (baseProcessor.beforeProcess()) {
 				baseProcessor.process();
-			} catch (ProcessorException e) {
-				// TODO Error handle
-			} finally {
-				baseProcessor.afterProcess();
 			}
+		} catch (ProcessorException e) {
+			// TODO Error handle
+		} finally {
+			baseProcessor.afterProcess();
 		}
 	}
 
