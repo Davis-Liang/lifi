@@ -29,7 +29,7 @@ CREATE TABLE `dim_config_entity` (
   `name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `dim_config_entity` (
 
 LOCK TABLES `dim_config_entity` WRITE;
 /*!40000 ALTER TABLE `dim_config_entity` DISABLE KEYS */;
-INSERT INTO `dim_config_entity` VALUES (1,'CONFIG_SHEET_PPK');
+INSERT INTO `dim_config_entity` VALUES (1,'CONFIG_SHEET_PPK'),(2,'DSI_RESULT');
 /*!40000 ALTER TABLE `dim_config_entity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,6 +67,72 @@ LOCK TABLES `dim_config_sheet_ppk` WRITE;
 /*!40000 ALTER TABLE `dim_config_sheet_ppk` DISABLE KEYS */;
 INSERT INTO `dim_config_sheet_ppk` VALUES (5,14,'SX4705-101','PPK 6','2018-06-12 10:01:11');
 /*!40000 ALTER TABLE `dim_config_sheet_ppk` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dim_dsi_result`
+--
+
+DROP TABLE IF EXISTS `dim_dsi_result`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dim_dsi_result` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `batch_id` int(11) NOT NULL,
+  `property1` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property2` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property3` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property4` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property5` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property6` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property7` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property8` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property9` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property10` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property11` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property12` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `property13` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dim_dsi_result`
+--
+
+LOCK TABLES `dim_dsi_result` WRITE;
+/*!40000 ALTER TABLE `dim_dsi_result` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dim_dsi_result` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dim_dsi_result_param`
+--
+
+DROP TABLE IF EXISTS `dim_dsi_result_param`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dim_dsi_result_param` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `batch_id` int(11) NOT NULL,
+  `account_type` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `prod_engn_desc` varchar(6) COLLATE utf8_unicode_ci NOT NULL,
+  `season_from` varchar(8) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `season_to` varchar(8) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `properties` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dim_dsi_result_param`
+--
+
+LOCK TABLES `dim_dsi_result_param` WRITE;
+/*!40000 ALTER TABLE `dim_dsi_result_param` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dim_dsi_result_param` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -206,4 +272,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-12 18:06:31
+-- Dump completed on 2018-06-15 17:38:09

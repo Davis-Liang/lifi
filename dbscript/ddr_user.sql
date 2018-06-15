@@ -18,6 +18,33 @@ USE `ddr`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `dim_account`
+--
+
+DROP TABLE IF EXISTS `dim_account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dim_account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `account_type` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dim_account`
+--
+
+LOCK TABLES `dim_account` WRITE;
+/*!40000 ALTER TABLE `dim_account` DISABLE KEYS */;
+INSERT INTO `dim_account` VALUES (1,'Belle','Normal','',1),(2,'GoodBaby','GB','',1);
+/*!40000 ALTER TABLE `dim_account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `dim_resource`
 --
 
@@ -126,6 +153,35 @@ LOCK TABLES `stg_resource_role` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `stg_user_account`
+--
+
+DROP TABLE IF EXISTS `stg_user_account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `stg_user_account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `account_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_stg_user_account_1` (`user_id`),
+  KEY `fk_stg_user_account_2` (`account_id`),
+  CONSTRAINT `fk_stg_user_account_1` FOREIGN KEY (`user_id`) REFERENCES `dim_user` (`id`),
+  CONSTRAINT `fk_stg_user_account_2` FOREIGN KEY (`account_id`) REFERENCES `dim_account` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `stg_user_account`
+--
+
+LOCK TABLES `stg_user_account` WRITE;
+/*!40000 ALTER TABLE `stg_user_account` DISABLE KEYS */;
+INSERT INTO `stg_user_account` VALUES (1,1,1);
+/*!40000 ALTER TABLE `stg_user_account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `stg_user_role`
 --
 
@@ -153,6 +209,10 @@ LOCK TABLES `stg_user_role` WRITE;
 INSERT INTO `stg_user_role` VALUES (1,1,1);
 /*!40000 ALTER TABLE `stg_user_role` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'ddr'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -163,4 +223,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-11 15:04:08
+-- Dump completed on 2018-06-15 17:37:45
